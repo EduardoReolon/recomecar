@@ -1,0 +1,7 @@
+RewriteEngine On
+AddDefaultCharset UTF-8
+
+# RewriteCond %{HTTP_HOST} ^(www.)?.*$
+# RewriteRule ^(/)?$ public [L]
+
+RewriteRule ^(.*)$ public/$1 [L]

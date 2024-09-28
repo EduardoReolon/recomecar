@@ -1,0 +1,18 @@
+RewriteEngine On
+# RewriteBase /sappr/public
+AddDefaultCharset UTF-8
+
+# Remove o prefixo "/sappr/public" da URL
+# RewriteRule ^sappr/(.*)$ /$1 [L,R=301]
+
+# whenever a rule matches (and L flag is present), rewrite rappens and the loop starts over
+# loop only fineshes when no rewrite is performed
+
+# after rewriting is done, goes to a file, that's what this line is for
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule . - [L]
+
+RewriteCond %{REQUEST_URI} ^/?(recomecar/)?public/api(\/.*)?$ [NC]
+RewriteRule . api.php [L]
+
+RewriteRule . index.php [L]

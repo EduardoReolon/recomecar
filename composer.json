@@ -1,0 +1,17 @@
+{
+    "name": "eduar/recomecar",
+    "autoload": {
+        "psr-4": {
+            "Eduar\\Recomecar\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Eduardo Reolon",
+            "email": "eduardo_reolon@hotmail.com"
+        }
+    ],
+    "require": {
+        "firebase/php-jwt": "^6.10"
+    }
+}
