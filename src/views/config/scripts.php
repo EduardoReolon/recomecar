@@ -36,7 +36,7 @@
     /**
      * set drop area functions
      */
-    function setDropArea(dropAreaId = 'drop-area', fileListId = 'file-list') {
+    function setDropArea(dropAreaId = 'drop-area', fileListId = 'file-list', buttonIdClick = '') {
         const dropArea = document.getElementById(dropAreaId);
         const fileList = document.getElementById(fileListId);
         
@@ -60,12 +60,13 @@
             dropArea.classList.remove('active');
             
             const files = event.dataTransfer.files;
-            handleFiles(files);
-            
+
             fileUpload.files = files;
+
+            handleFiles(files);
         });
 
-        document.getElementById('file-upload').addEventListener('change', (event) => {
+        dropArea.querySelector('#file-upload').addEventListener('change', (event) => {
             const files = event.target.files;
             handleFiles(files);
         });
@@ -78,6 +79,9 @@
                 listItem.textContent = `${file.name} (${formatBytes(file.size)})`;
                 fileList.appendChild(listItem);
             }
+
+            const button = document.getElementById(buttonIdClick);
+            if (button) button.click();
         }
 
         function formatBytes(bytes) {
@@ -211,6 +215,8 @@
                     window.location.href = responseJson.location;
                 }
 
+                if (responseJson.refreshPage) refreshPage = true;
+
                 if (Array.isArray(responseJson.alerts)) {
                     for (const alert of responseJson.alerts) {
                         sendAlert(alert.type, alert.msg, alert.time);
@@ -300,5 +306,137 @@
                 block: 'start' // opcional: alinha o topo do elemento com o topo da viewport
             });
         }, 100);
+    }
+
+    /**
+     * Obtém todos os estados.
+     *
+     * @returns {Promise<Array<{ 
+     *     id: number, 
+     *     sigla: string, 
+     *     nome: string, 
+     *     regiao: { id: number, sigla: string, nome: string }
+     * }>>} Uma promessa que resolve para um array de objetos representando os estados.
+     */
+    async function getEstados() {
+        const response = await fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados');
+        const estados = await response.json();
+        return estados;
+    }
+
+    /**
+     * Obtém as cidades de um estado específico.
+     *
+     * @param {number} estadoId - O ID do estado.
+     * @returns {Promise<Array<{ id: number, nome: string,
+     *     microrregiao: {
+     *         id: number, 
+     *         nome: string, 
+     *         mesorregiao: { 
+     *             id: number, 
+     *             nome: string, 
+     *             UF: { 
+     *                 id: number, 
+     *                 sigla: string, 
+     *                 nome: string, 
+     *                 regiao: { id: number, sigla: string, nome: string } 
+     *             } 
+     *         } 
+     *     }, 
+     *     "regiao-imediata": { 
+     *         id: number, 
+     *         nome: string, 
+     *         "regiao-intermediaria": { 
+     *             id: number, 
+     *             nome: string, 
+     *             UF: { 
+     *                 id: number, 
+     *                 sigla: string, 
+     *                 nome: string, 
+     *                 regiao: { id: number, sigla: string, nome: string }
+     *             } 
+     *         } 
+     *     } 
+     * }>>} Uma promessa que resolve para um array de objetos representando as cidades.
+     */
+    async function getCidadesByEstado(estadoId) {
+        const response = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${estadoId}/municipios`);
+        const cidades = await response.json();
+        return cidades;
+    }
+
+    /**
+     * Obtém informações sobre uma cidade específica pelo seu ID.
+     *
+     * @param {number} cidadeId - O ID da cidade.
+     * @returns {Promise<{ 
+     *     id: number, 
+     *     nome: string, 
+     *     microrregiao: { 
+     *         id: number, 
+     *         nome: string, 
+     *         mesorregiao: { 
+     *             id: number, 
+     *             nome: string, 
+     *             UF: { 
+     *                 id: number, 
+     *                 sigla: string, 
+     *                 nome: string, 
+     *                 regiao: { id: number, sigla: string, nome: string }
+     *             } 
+     *         } 
+     *     }, 
+     *     "regiao-imediata": { 
+     *         id: number, 
+     *         nome: string, 
+     *         "regiao-intermediaria": { 
+     *             id: number, 
+     *             nome: string, 
+     *             UF: { 
+     *                 id: number, 
+     *                 sigla: string, 
+     *                 nome: string, 
+     *                 regiao: { id: number, sigla: string, nome: string }
+     *             } 
+     *         } 
+     *     } 
+     * }>} Uma promessa que resolve para um objeto representando a cidade.
+     */
+    async function getCidadeById(cidadeId) {
+        const response = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/municipios/${cidadeId}`);
+        if (!response.ok) {
+            throw new Error(`Erro ao buscar a cidade: ${response.statusText}`);
+        }
+        const cidade = await response.json();
+        return cidade; // Retorna um objeto com as informações da cidade
+    }
+
+    /**
+     * Obtém informações sobre um endereço a partir do CEP.
+     *
+     * @param {string} cep - O CEP para o qual as informações devem ser obtidas.
+     * @returns {Promise<{ 
+     *     cep: string, 
+     *     logradouro: string, 
+     *     complemento: string, 
+     *     unidade: string, 
+     *     bairro: string, 
+     *     localidade: string, 
+     *     uf: string, 
+     *     estado: string, 
+     *     regiao: string, 
+     *     ibge: string, 
+     *     gia: string, 
+     *     ddd: string, 
+     *     siafi: string  
+     * }>} Uma promessa que resolve para um objeto representando as informações do endereço.
+     */
+    async function getEnderecoByCep(cep) {
+        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        if (!response.ok) {
+            throw new Error(`Erro ao buscar o endereço: ${response.statusText}`);
+        }
+        const endereco = await response.json();
+        return endereco; // Retorna um objeto com as informações do endereço
     }
 </script>

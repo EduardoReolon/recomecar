@@ -29,6 +29,7 @@ class Http_response {
     private mixed $body = '';
     /** @var User_alert[] */
     private array $alerts = [];
+    private bool $force_page_refresh = false;
 
     public function status(int $status) {
         $this->status = $status;
@@ -47,6 +48,10 @@ class Http_response {
 
     public function redirectUser(string $location) {
         $this->location_user = $location;
+    }
+
+    public function forcePageRefresh() {
+        $this->force_page_refresh = true;
     }
 
     public function sendAlert(string $msg, string $type = Helper::ALERT_WARNING, int $time = 30000) {
@@ -82,6 +87,8 @@ class Http_response {
                 'alerts' => $this->alerts,
                 'data' => $this->body,
             ];
+            
+            if ($this->force_page_refresh) $response['refreshPage'] = true;
             
             if (isset($this->location_user)) {
                 $response['redirect'] = true;

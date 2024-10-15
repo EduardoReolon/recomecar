@@ -77,19 +77,28 @@ class Components {
         <?php
     }
 
-    static function dropFileArea(string $name = 'files[]') {
+    static function dropFileArea(string $name = 'files[]', string $text = 'Arraste e solte arquivos aqui ou clique para selecionar (PDF e JPG, até 5 MB)', ?bool $singleFile = false, ?bool $autoSubmit = false) {
+        $randomId = Helper::randomStr('', 5);
         ?>
-            <div class="drop-area" id="drop-area">
-                Arraste e solte arquivos aqui ou clique para selecionar
-                <input type="file" id="file-upload" name="<?php echo $name ?>" multiple style="display: none;">
+            <div class="drop-area" id="drop-area-<?php echo $randomId ?>">
+                <?php echo $text ?>
+                <input type="file" id="file-upload" name="<?php echo $name ?>" <?php echo $singleFile ? '' : 'multiple' ?> style="display: none;">
             </div>
 
             <div class="file-list">
-                <ul id="file-list"></ul>
+                <ul id="file-list-<?php echo $randomId ?>"></ul>
             </div>
 
+            <?php
+                if ($autoSubmit) {
+                    ?>
+                        <input hidden type="submit" id="submit-<?php echo $randomId ?>">
+                    <?php
+                }
+            ?>
+
             <script>
-                setDropArea(dropAreaId = 'drop-area', fileListId = 'file-list');
+                setDropArea(dropAreaId = 'drop-area-<?php echo $randomId ?>', fileListId = 'file-list-<?php echo $randomId ?>', buttonIdClick = 'submit-<?php echo $randomId ?>');
             </script>
         <?php
     }
