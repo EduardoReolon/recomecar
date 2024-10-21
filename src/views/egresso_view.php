@@ -211,15 +211,27 @@ class Egresso_view extends View_main {
                     ?>
                         <label for="inputIdStatus" class="col-sm-1 col-form-label">Status:</label>
                         <div class="col-4 d-inline-block">
-                            <select name="id_status" class="form-select" aria-label="Default select example" id="inputIdStatus">
-                                <?php
-                                    foreach ($this->statuses as $status) {
-                                        ?>
-                                            <option value="<?php echo $status->id ?>" <?php echo $status->id === $this->egresso->id_status ? 'selected' : '' ?>><?php echo $status->slug ?></option>
-                                        <?php
-                                    }
-                                ?>
-                            </select>
+                            <form action="<?php echo Helper::apiPath('egresso/' . $this->egresso->id . '/status'); ?>" method="POST" id="myForm">
+                                <select name="id_status" class="form-select" aria-label="Default select example" id="inputIdStatus">
+                                    <?php
+                                        foreach ($this->statuses as $status) {
+                                            ?>
+                                                <option value="<?php echo $status->id ?>" <?php echo $status->id === $this->egresso->id_status ? 'selected' : '' ?>><?php echo $status->slug ?></option>
+                                            <?php
+                                        }
+                                    ?>
+                                </select>
+                                <input type="submit" hidden>
+                            </form>
+                            <script>
+                                document.getElementById('inputIdStatus').addEventListener('change', function() {
+                                        const submitButton = document.querySelector('#myForm input[type="submit"]');
+        
+                                        if (submitButton) {
+                                            submitButton.click();
+                                        }
+                                    });
+                            </script>
                         </div>
                     <?php
                 }

@@ -44,4 +44,20 @@ class Egresso_controller extends Base_controller {
 
         if ($id_egresso === 0) $response->redirectUser(Helper::uriRoot("egresso/{$egresso->id}"));
     }
+
+    /**
+     * @request
+     * map /:id_egresso/status
+     * method post
+     */
+    static public function storeStatus(Egresso_status_request $request, Http_response $response) {
+        $id_egresso = (int) RouteParams::get('id_egresso');
+
+        $egresso = Egresso::findBy('id', $id_egresso);
+        if (!isset($egresso)) return $response->status(404)->sendAlert('Cadastro não encontrado');
+
+        $egresso->id_status = $request->id_status;
+
+        $egresso->save();
+    }
 }
