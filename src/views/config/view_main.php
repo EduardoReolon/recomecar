@@ -39,6 +39,9 @@ class View_main extends View_core {
                                     <a href="<?php echo Helper::uriRoot('/') ?>" class="list-group-item list-group-item-action py-2 ripple<?php echo $uri === '/' ? ' active' : ''; ?>" aria-current="true">
                                         <i class="fas fa-tachometer-alt fa-fw me-3"></i><span>Página inicial</span>
                                     </a>
+                                    <a href="<?php echo Helper::uriRoot('/egressos') ?>" class="list-group-item list-group-item-action py-2 ripple<?php echo $uri === '/egressos' ? ' active' : ''; ?>" aria-current="true">
+                                        <i class="fas fa-tachometer-alt fa-fw me-3"></i><span>Egressos</span>
+                                    </a>
                                 </div>
                             </div>
                         </nav>

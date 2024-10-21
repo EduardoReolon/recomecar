@@ -432,7 +432,13 @@
      * }>} Uma promessa que resolve para um objeto representando as informações do endereço.
      */
     async function getEnderecoByCep(cep) {
-        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`, {
+            method: "GET",
+            mode: "cors",
+            headers: {
+                'content-type': 'application/json;charset=utf-8',
+            }
+        });
         if (!response.ok) {
             throw new Error(`Erro ao buscar o endereço: ${response.statusText}`);
         }

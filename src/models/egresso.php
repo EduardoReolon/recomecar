@@ -1,8 +1,13 @@
 <?php
 require_once __DIR__ . '/config/entity.php';
+require_once 'status.php';
+require_once 'acompanhamento.php';
 
 class Egresso extends Entity {
     protected static $table = 'egresso';
+    public Status $status;
+    /** @var Acompanhamento[] */
+    public array $acompanhamentos;
     
     /**
      * @column
@@ -16,7 +21,7 @@ class Egresso extends Entity {
     /** @column */
     public string $cpf;
     /** @column */
-    public int $status;
+    public int $id_status;
     /** @column */
     public ?string $rg;
     /** @column */
@@ -47,4 +52,24 @@ class Egresso extends Entity {
     public ?string $telefone_contato;
     /** @column */
     public ?string $observacoes;
+    /** @column */
+    public DateTime $updated_at;
+    /** @column */
+    public DateTime $created_at;
+
+    public function loadStatus() {
+        if (isset($this->status)) return;
+
+        $this->status = Status::findBy('id', $this->id_status);
+    }
+
+    public function loadAcompanhamentos() {
+        if (isset($this->acompanhamentos)) return;
+
+        $this->acompanhamentos = Acompanhamento::fetchSimpler([['id_egresso', '=', $this->id]]);
+    }
+
+    protected function beforeSave() {
+        if (!isset($this->id_status)) $this->id_status = 1;
+    }
 }

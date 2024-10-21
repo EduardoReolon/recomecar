@@ -4,7 +4,7 @@ require_once('query.php');
 require_once('page.php');
 require_once __DIR__ . '/../../services/log.php';
 
-abstract class Column {
+class Column {
     public bool $isColumn = false;
     public string $prop_name;
     public string $col_name;
