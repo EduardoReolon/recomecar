@@ -22,17 +22,12 @@ class Egressos_view extends View_main {
                     $ids_status[] = (int) $id_status;
                 }
             } else $ids_status[] = (int) $queryParams['ids_status'];
-        } else {
-            foreach ($statuses as $status) {
-                if (!$status->ativo) continue;
-                $ids_status[] = $status->id;
-            }
         }
 
         if (key_exists('filtroNome', $queryParams)) $filtroNome = $queryParams['filtroNome'];
 
         $where = Where::and();
-        $where->add(Where::clause('id_status', 'in', $ids_status));
+        if (!empty($ids_status)) $where->add(Where::clause('id_status', 'in', $ids_status));
 
         if (!empty($filtroNome)) {
             $where->add(Where::clause('CONCAT(nome, \' \', sobrenome)', 'like', "%{$filtroNome}%"));
@@ -62,7 +57,7 @@ class Egressos_view extends View_main {
                 </label>
                 <label>
                     Status:
-                    <?php Components::multiSelect($arr_status, 'Nenhum selecionado', '<br>') ?>
+                    <?php Components::multiSelect($arr_status, 'Todos', '<br>') ?>
                 </label>
                 <input type="submit" value="Buscar" class="btn btn-primary">
                 <a class="btn btn-primary" href="<?php echo Helper::uriRoot('/egresso/0') ?>" role="button">Novo cadastro</a>
