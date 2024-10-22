@@ -63,10 +63,30 @@ class Egresso extends Entity {
         $this->status = Status::findBy('id', $this->id_status);
     }
 
-    public function loadAcompanhamentos() {
+    public function loadAcompanhamentos(bool $loadUsuers = false) {
         if (isset($this->acompanhamentos)) return;
 
-        $this->acompanhamentos = Acompanhamento::fetchSimpler([['id_egresso', '=', $this->id]]);
+        $query = Acompanhamento::query();
+        $query->order_by('created_at', 'DESC');
+        $query->where(Where::clause('id_egresso', '=', $this->id));
+        $this->acompanhamentos = Acompanhamento::fetch($query);
+
+        if ($loadUsuers) {
+            $idsUsuarios = [];
+            foreach($this->acompanhamentos as $acompanhamento) {
+                $idsUsuarios[] = $acompanhamento->id_usuario;
+            }
+
+            $users = User::fetchSimpler([['id', 'in', $idsUsuarios]]);
+
+            foreach ($this->acompanhamentos as $acompanhamento) {
+                foreach ($users as $user) {
+                    if ($user->id !== $acompanhamento->id_usuario) continue;
+                    $acompanhamento->user = $user;
+                    break;
+                }
+            }
+        }
     }
 
     protected function beforeSave() {

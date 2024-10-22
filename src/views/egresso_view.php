@@ -15,7 +15,10 @@ class Egresso_view extends View_main {
         if ($id_egresso === 0) {
             $this->egresso = new Egresso();
             $this->egresso->id = 0;
-        } else $this->egresso = Egresso::findBy('id', $id_egresso);
+        } else {
+            $this->egresso = Egresso::findBy('id', $id_egresso);
+            $this->egresso->loadAcompanhamentos(true);
+        }
 
         $this->statuses = Status::fetchSimpler();
         
@@ -196,7 +199,39 @@ class Egresso_view extends View_main {
 
     private function formAcompanhamento() {
         ?>
-            <h1>acompanhamento</h1>
+            <form refresh-page action="<?php echo Helper::apiPath("egresso/{$this->egresso->id}/acompanhamento") ?>" method="POST">
+                <div class="row">
+                    <label for="taMensagem" class="col-sm-1 col-form-label">Mensagem:</label>
+                    <textarea name="mensagem" id="taMensagem" cols="30" rows="3"></textarea>
+                    <input type="submit" value="Salvar" class="col-sm-1 btn btn-primary">
+                </div>
+            </form>
+
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Responsável</th>
+                        <th scope="col">Data</th>
+                        <th scope="col">Mensagem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                        foreach ($this->egresso->acompanhamentos as $acompanhamento) {
+                            $acompanhamento->loadUser();
+                            ?>
+                                <tr>
+                                    <td><?php echo $acompanhamento->id ?></td>
+                                    <td><?php echo $acompanhamento->user->name . ' ' . $acompanhamento->user->surname ?></td>
+                                    <td><?php echo $acompanhamento->created_at->format('d/m/y H:i') ?></td>
+                                    <td><?php echo htmlspecialchars($acompanhamento->mensagem, ENT_QUOTES, 'UTF-8') ?></td>
+                                </tr>
+                            <?php
+                        }
+                    ?>
+                </tbody>
+            </table>
         <?php
     }
 

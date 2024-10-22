@@ -73,7 +73,8 @@ class Query {
 
             if ($this->paged) {
                 // ORDER BY id OFFSET 10 ROWS FETCH NEXT 10 ROWS ONLY;
-                $query .= ' OFFSET ' . ($this->page - 1) * $this->per_page . ' ROWS FETCH NEXT ' . $this->per_page . ' ROWS ONLY';
+                // $query .= ' OFFSET ' . ($this->page - 1) * $this->per_page . ' ROWS FETCH NEXT ' . $this->per_page . ' ROWS ONLY';
+                $query .= ' LIMIT ' . $this->per_page . ' OFFSET ' . ($this->page - 1) * $this->per_page;
             }
         }
         return $query;

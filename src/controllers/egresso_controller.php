@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../services/auth.php';
 require_once __DIR__ . '/../models/egresso.php';
+require_once __DIR__ . '/../models/acompanhamento.php';
 
 class Egresso_controller extends Base_controller {
     static protected array $map = ['api', 'v1', 'egresso'];
@@ -59,5 +60,24 @@ class Egresso_controller extends Base_controller {
         $egresso->id_status = $request->id_status;
 
         $egresso->save();
+    }
+
+    /**
+     * @request
+     * map /:id_egresso/acompanhamento
+     * method post
+     */
+    static public function acompanhamento(Acompanhamento_request $request, Http_response $response) {
+        $id_egresso = (int) RouteParams::get('id_egresso');
+
+        $egresso = Egresso::findBy('id', $id_egresso);
+        if (!isset($egresso)) return $response->status(404)->sendAlert('Cadastro não encontrado');
+
+        $acompanhamento = new Acompanhamento();
+        $acompanhamento->mensagem = $request->mensagem;
+        $acompanhamento->id_egresso = $egresso->id;
+        $acompanhamento->id_usuario = Auth::getUserId();
+
+        $acompanhamento->save();
     }
 }
