@@ -3,6 +3,7 @@ require_once __DIR__ . '/../src/views/config/view_main.php';
 require_once __DIR__ . '/../src/views/home_view.php';
 require_once __DIR__ . '/../src/views/egresso_view.php';
 require_once __DIR__ . '/../src/views/egressos_view.php';
+require_once __DIR__ . '/../src/views/usuarios_view.php';
 require_once __DIR__ . '/../src/views/login_view.php';
 
 $uri = Helper::getCurrentUri();
@@ -27,6 +28,9 @@ if (Helper::uriRoot($uri) === Helper::uriLogin()) {
     return;
 } else if ($uri === '/') {
     new Home_view();
+    return;
+} else if ($uri === '/usuarios') {
+    new Usuarios_view();
     return;
 } else if ($uri === '/egressos') {
     new Egressos_view();

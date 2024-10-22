@@ -17,6 +17,9 @@ class View_main extends View_core {
                     }
 
                     /* Sidebar */
+                    
+
+                    /* Sidebar */
                     .sidebar {
                         position: fixed;
                         top: 0;
@@ -30,14 +33,23 @@ class View_main extends View_core {
                     #page-content-wrapper{
                         padding-left: 240px;
                     }
+
+                    .sidebar h3{
+                        color: black;
+                        text-align: center;
+                    }
                 </style>
                 <div id="wrapper">
                     <div id="sidebar-wrapper" class="collapse d-lg-block sidebar collapse bg-white">
                         <nav class="collapse d-lg-block sidebar collapse bg-white">
                             <div class="position-sticky">
+                                <h3>Recomeçar</h3>
                                 <div class="list-group list-group-flush mx-3 mt-4">
                                     <a href="<?php echo Helper::uriRoot('/') ?>" class="list-group-item list-group-item-action py-2 ripple<?php echo $uri === '/' ? ' active' : ''; ?>" aria-current="true">
                                         <i class="fas fa-tachometer-alt fa-fw me-3"></i><span>Página inicial</span>
+                                    </a>
+                                    <a href="<?php echo Helper::uriRoot('/usuarios') ?>" class="list-group-item list-group-item-action py-2 ripple<?php echo $uri === '/usuarios' ? ' active' : ''; ?>" aria-current="true">
+                                        <i class="fas fa-tachometer-alt fa-fw me-3"></i><span>Usuários</span>
                                     </a>
                                     <a href="<?php echo Helper::uriRoot('/egressos') ?>" class="list-group-item list-group-item-action py-2 ripple<?php echo $uri === '/egressos' ? ' active' : ''; ?>" aria-current="true">
                                         <i class="fas fa-tachometer-alt fa-fw me-3"></i><span>Egressos</span>

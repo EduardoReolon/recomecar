@@ -33,4 +33,41 @@ class Auth_controller extends Base_controller {
             throw new Exception("Invalid credentials", 1);
         }
     }
+
+    /**
+     * @request
+     * map /:id_usuario
+     * method post
+     * no_auth
+     */
+    static public function register(register_request $request, Http_response $response) {
+        $id_usuario = (int) RouteParams::get('id_usuario');
+
+        $user = null;
+        if ($id_usuario === 0) {
+            if (!isset($request->password) || !isset($request->password_repeat)) return $response->status(400)->sendAlert('É necessário informar a senha para criar um usuário');
+            $user = new User();
+        } else {
+            $user = User::findBy('id', $id_usuario);
+            if ($user === null) return $response->status(404)->sendAlert('Usuário não encontrado');
+        }
+        
+        if (isset($request->password)) {
+            if (!isset($request->password_repeat) || $request->password !== $request->password_repeat) return $response->status(400)->sendAlert('As senhas não coincidem');
+        }
+
+        if ($id_usuario === 0 || $user->username !== $request->username) {
+            $outro = User::findBy('username', $request->username);
+            if ($outro !== null) {
+                if ($id_usuario === 0 || $outro->id !== $id_usuario) return $response->status(400)->sendAlert('Há outro usuário com esse e-mail');
+            }
+        }
+
+        $user->username = $request->username;
+        $user->name = $request->name;
+        $user->surname = $request->surname;
+        if (isset($request->password)) $user->setPassword($request->password);
+
+        $user->save();
+    }
 }

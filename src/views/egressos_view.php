@@ -8,6 +8,8 @@ class Egressos_view extends View_main {
     private function formLista() {
         $statuses = Status::fetchSimpler();
         $ids_status = [];
+
+        $filtroNome = '';
         
         $queryParams = Helper::bracketless_input('GET');
         
@@ -27,9 +29,15 @@ class Egressos_view extends View_main {
             }
         }
 
+        if (key_exists('filtroNome', $queryParams)) $filtroNome = $queryParams['filtroNome'];
+
         $where = Where::and();
         $where->add(Where::clause('id_status', 'in', $ids_status));
 
+        if (!empty($filtroNome)) {
+            $where->add(Where::clause('CONCAT(nome, \' \', sobrenome)', 'like', "%{$filtroNome}%"));
+        }
+        
         $query = Egresso::query();
         $query->order_by('nome');
         $query->where($where);
@@ -46,6 +54,12 @@ class Egressos_view extends View_main {
         ?>
             <form action="" method="get">
                 <?php $page_info->hiddenInputs() ?>
+                <label>
+                    Nome:
+                    <div class="d-inline-block">
+                        <input type="text" class="form-control" name="filtroNome" value="<?php echo $filtroNome ?>">
+                    </div>
+                </label>
                 <label>
                     Status:
                     <?php Components::multiSelect($arr_status, 'Nenhum selecionado', '<br>') ?>
