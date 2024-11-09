@@ -6,7 +6,7 @@ class Usuarios_view extends View_main {
     private function formLista() {
         $query = User::query();
         $query->order_by('name');
-        $query->where(Where::clause('id', '<>', 1));
+        $query->where(Where::clause('hidden', '=', false));
 
         $usuarios = User::fetch($query);
         

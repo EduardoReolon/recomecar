@@ -20,6 +20,8 @@ class User extends Entity {
     /** @column */
     public ?string $surname;
     /** @column */
+    public bool $hidden = false;
+    /** @column */
     public bool $active = true;
     /**
      * @var string[] | null
