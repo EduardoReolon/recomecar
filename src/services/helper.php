@@ -190,7 +190,7 @@ class Helper {
     }
 
     public static function uriRoot(string $uri = '/'): string {
-        preg_match('/^\/(recomecar\/)/', $_SERVER["REQUEST_URI"], $match);
+        preg_match('/^\/(recomecar\/)?/', $_SERVER["REQUEST_URI"], $match);
 
         return preg_replace('/(\/|\\\)+/', '/', $match[0] . '/' . $uri);
     }
