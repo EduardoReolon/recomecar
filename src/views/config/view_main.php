@@ -40,8 +40,8 @@ class View_main extends View_core {
                     }
                 </style>
                 <div id="wrapper">
-                    <div id="sidebar-wrapper" class="collapse d-lg-block sidebar collapse bg-white">
-                        <nav class="collapse d-lg-block sidebar collapse bg-white">
+                    <div id="sidebar-wrapper" class="d-lg-block sidebar bg-white">
+                        <nav class="d-lg-block sidebar bg-white">
                             <div class="position-sticky">
                                 <h3>Recomeçar</h3>
                                 <div class="list-group list-group-flush mx-3 mt-4">
