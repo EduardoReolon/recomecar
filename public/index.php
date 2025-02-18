@@ -23,6 +23,12 @@ if (preg_match('/^\/storage/', $uri)) {
     return;
 }
 
+if (preg_match('/^\/api/i', $uri)) {
+    require_once __DIR__ . '/../src/bootstrap.php';
+    apiRequest();
+    return;
+}
+
 if (Helper::uriRoot($uri) === Helper::uriLogin()) {
     new Login_view();
     return;
