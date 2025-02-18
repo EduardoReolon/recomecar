@@ -22,8 +22,11 @@ set_exception_handler(function(Throwable $exception) {
     Log::new(Log::TYPE_EXCEPTION)->setException($exception);
 });
 
+Log::new()->setMessage('1');
 function apiRequest() {
+    Log::new()->setMessage('2');
     require_once 'services/api_handler.php';
+    Log::new()->setMessage('3');
 
     $apiHandler = new Api_handler();
     $apiHandler->handler();
