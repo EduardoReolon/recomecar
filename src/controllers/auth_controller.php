@@ -15,16 +15,21 @@ class Auth_controller extends Base_controller {
         }
         
         try {
+            Log::new()->setMessage('1');
             $usuario = User::findBy('username', $request->username);
+            Log::new()->setMessage('2');
 
             if (!isset($usuario)) {
                 return $response->status(400)->sendAlert('User not found!');
             }
+            Log::new()->setMessage('3');
             if (!$usuario->passwordCheck($request->password)) {
                 return $response->status(400)->sendAlert('Wrong password!');
             }
     
+            Log::new()->setMessage('4');
             Auth::refresh_token($usuario);
+            Log::new()->setMessage('5');
     
             $response->redirectUser(Helper::uriRoot());
             exit();
